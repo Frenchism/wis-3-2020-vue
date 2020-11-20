@@ -1,38 +1,80 @@
 <!DOCTYPE html>
-<html lang="eng">
+<html lang="en">
     <head>
         <meta charset="utf-8">
         <title>Weather App</title>
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
         <style>
-            @import url('https://fonts.googleapis.com/css2?family=Asap:wght@400;700&display=swap');
-            #app {font-family: "Asap";}
+            [v-cloak] {display: none;}
+            @import url('https://fonts.googleapis.com/css2?family=Maven+Pro:wght@400;500;900&display=swap');
+            * {font-family: 'Maven Pro', sans-serif;}
+            #app-title {font-size: 48px; font-weight: bold}
+            #location {font-size: 36px; font-weight: bold}
+            #date {font-size: 16px;}
+            #temp {font-size: 48px; font-weight: bold}
+            #weather {font-size: 16px}
         </style>
     </head>
-    <body id="app" class="bg-light">
-        <h1 class="text-center mt-5 mb-5">What's the weather today ?</h1>
+    <body class="bg-light">
+    <div id="app" v-cloak="display-none">
+        <h1 id="app-title" class="text-center mt-5 mb-5">What's the weather ?</h1>
         <div class="container col-lg-4 mt-5 mb-5">
-            <form class="form-inline mx auto justify-content-md-center">
-                <input class="form-control mr-sm-2 shadow-sm" style="border: none; min-width: 50%; border-radius: 10px" type="search" placeholder="Search" aria-label="Search">
-                <button class="btn my-2 my-sm-0 shadow-sm bg-dark text-white" type="submit" style="border: none; border-radius: 10px">Search</button>
+            <form class="form-inline mx auto justify-content-md-center" v-on:submit.prevent="fetchWeather">
+                <input v-model="query" class="form-control shadow-sm" style="border: none; min-width: 50%; border-radius: 10px" type="search" placeholder="Search a city..." aria-label="Search" @keypress="fetchWeather"/>
             </form>
         </div>
-        <div class="container col-lg-3">
-            <div class="card text-center shadow-sm bg-white" style="border: none; border-radius: 10px">
-                <div class="card-header bg-transparent" style="border: none">
-                    <h2>City, Country</h2>
-                    <span>Date</span>
+        <div class="container col-lg-3 text-center">
+            <div class="card shadow-sm bg-white" style="border: none; border-radius: 10px" v-if="typeof weather.main != 'undefined'">
+                <div class="card-body mb-5">
+                    <div class="bg-transparent" style="border: none">
+                        <div id="temp">{{ Math.round(weather.main.temp) }}°</div>
+                        <div id="weather">{{ weather.weather[0].main }}</div>
+                    </div>
                 </div>
-                <div class="card-body">
-                    <p>Temperature</p>
-                    <p>Weather</p>
+                <div id="weather-box" class="card-body bg-transparent">
+                    <h2 id="location">{{ weather.name }}, {{weather.sys.country}}</h2>
+                    <div class="bg-transparent mt-2" style="border: none">
+                        <span id="date">{{ dateBuilder() }}</span>
+                    </div>
                 </div>
             </div>
         </div>
+    </div>
         <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
         <script>
-            var app = new Vue({
+            new Vue({
+                el: '#app',
+                data () {
+                    return {
+                        api_key: 'c4233ddd3db902ec1fd95cfe611121ec',
+                        url_base: 'https://api.openweathermap.org/data/2.5/',
+                        query: '',
+                        weather: {}
+                    }
+                },
+                methods: {
+                    fetchWeather (e) {
+                        if (e.key === "Enter") {
+                            fetch(`${this.url_base}weather?q=${this.query}&units=metric&APPID=${this.api_key}`)
+                                .then(res => {
+                                    return res.json();
+                                }).then(this.setResults);
+                        }
+                    },
+                    setResults (results){
+                        this.weather = results;
+                    },
+                    dateBuilder () {
+                        let d = new Date();
+                        let months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
+                        let date = d.getDate();
+                        let month = months[d.getMonth()];
+                        let year = d.getFullYear();
+
+                        return `${date} ${month} ${year}`
+                    }
+                }
             })
         </script>
     </body>    
