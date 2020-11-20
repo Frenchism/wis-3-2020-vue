@@ -1,25 +1,39 @@
 <!DOCTYPE html>
-<html>
+<html lang="eng">
     <head>
         <meta charset="utf-8">
         <title>Weather App</title>
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+        <style>
+            @import url('https://fonts.googleapis.com/css2?family=Asap:wght@400;700&display=swap');
+            #app {font-family: "Asap";}
+        </style>
     </head>
-    <body>
-        <h1 class="text-center mt-4 pb-4">What's the weather today ?</h1>
-        <div class="container">
-            <div class="card-deck col-sx-6">
-                <div class="card text-center shadow-sm mb-4 pb-2 col-lg-4 pr-0 pl-0" id="app-1">
-                    <h1 class="card-header mb-1">XX</h1>
-                    <div class="card-body">
-
-                    </div>
+    <body id="app" class="bg-light">
+        <h1 class="text-center mt-5 mb-5">What's the weather today ?</h1>
+        <div class="container col-lg-4 mt-5 mb-5">
+            <form class="form-inline mx auto justify-content-md-center">
+                <input class="form-control mr-sm-2 shadow-sm" style="border: none; min-width: 50%; border-radius: 10px" type="search" placeholder="Search" aria-label="Search">
+                <button class="btn my-2 my-sm-0 shadow-sm bg-dark text-white" type="submit" style="border: none; border-radius: 10px">Search</button>
+            </form>
+        </div>
+        <div class="container col-lg-3">
+            <div class="card text-center shadow-sm bg-white" style="border: none; border-radius: 10px">
+                <div class="card-header bg-transparent" style="border: none">
+                    <h2>City, Country</h2>
+                    <span>Date</span>
+                </div>
+                <div class="card-body">
+                    <p>Temperature</p>
+                    <p>Weather</p>
                 </div>
             </div>
         </div>
         <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
         <script>
+            var app = new Vue({
 
+            })
         </script>
     </body>    
 </html>
