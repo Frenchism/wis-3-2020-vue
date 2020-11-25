@@ -9,54 +9,58 @@
             @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;400;900&display=swap');
             #app {font-family: 'Poppins', sans-serif;}
             #app-title {font-size: 16px;}
-            #location {font-size: 36px; font-weight: bold}
+            #location {font-size: 28px;}
             #date {font-size: 12px;}
             #temp {font-size: 48px; font-weight: bold}
             #weather {font-size: 16px}
-            .card, .form-control{
-                background-color: #1D1D1D!important;
-                color: #878787;
-            }
-            .dark-mode, .custom-control-label{
-                color: #878787;
-            }
-            .bg-light{
-                background-color: #121212!important;
-            }
+            #min-max-temp {font-size: 12px; font-weight: lighter}
+            #pressure-humidity {font-size: 12px}
             .custom-control-input:checked~.custom-control-label::before {
                 color: #fff;
                 border-color: #878787;
                 background-color: #878787;
             }
+            /* Dark Mode */
+            .dark .card, .dark .form-control{
+                background-color: #1D1D1D!important;
+                color: #878787;
+            }
+            .dark .custom-control-label{
+                color: #878787;
+            }
+            .dark .bg-light{
+                background-color: #121212!important;
+            }
+
         </style>
     </head>
     <body class="bg-light">
     <div id="app" v-cloak="display-none">
-        <h1 id="app-title" class="text-center mt-5 mb-5 dark-mode">WEATHER APP</h1>
+        <h1 id="app-title" class="text-center mt-5 mb-5">WEATHER APP</h1>
         <div class="container col-lg-4 mt-5 mb-5">
             <form class="form-inline mx auto justify-content-md-center" v-on:submit.prevent="fetchWeather">
                 <input v-model="query" class="form-control shadow-sm" style="border: none; min-width: 50%; border-radius: 10px" type="search" placeholder="Recherchez une ville..." aria-label="Search" @keypress="fetchWeather"/>
             </form>
         </div>
-        <div class="container col-lg-3 text-center">
-            <div class="card shadow-sm bg-white" style="border: none; border-radius: 10px" v-if="typeof weather.main != 'undefined'">
+        <div class="container col-lg-3">
+            <div class="card text-center shadow-sm bg-white" style="border: none; border-radius: 10px" v-if="typeof weather.main != 'undefined'">
                 <div id="weather-box" class="card-body bg-transparent">
-                    <h2 id="location" class="pb-5">{{ weather.name }}, {{weather.sys.country}}</h2>
-                    <div id="temp">{{ Math.round(weather.main.temp) }}°</div>
-                    <div id="weather" style="text-transform: capitalize" >{{ weather.weather[0].description }}</div>
-                </div>
-                <div class="card-body">
-                    <div class="bg-transparent" style="border: none">
-                        <div class="bg-transparent mt-2" style="border: none">
-                            <span id="date">{{ dateBuilder() }}</span>
-                        </div>
+                    <div class="card-title">
+                        <div id="weather" style="text-transform: uppercase; margin-bottom: 1.5em">{{ weather.weather[0].description }}</div>
+                        <div id="temp">{{ Math.round(weather.main.temp) }}°C</div>
+                        <div id="min-max-temp">Min : {{ Math.round(weather.main.temp_min) }}°C / Max : {{ Math.round(weather.main.temp_max) }}°C</div>
+                        <h2 id="location" style="margin-top: 1.5em">{{ weather.name }}</h2>
+                        <span id="date" class="card-text">{{ dateBuilder() }}</span>
                     </div>
+                </div>
+                <div class="card-footer bg-light" style="border: none">
+                    <div id="pressure-humidity">Pression : {{ Math.round(weather.main.pressure) }} hPa - Humidité : {{ Math.round(weather.main.humidity) }}%</div>
                 </div>
             </div>
         </div>
         <div class="container col-lg-3 text-center mt-5">
             <div class="custom-control custom-switch">
-                <input type="checkbox" :checked="(mode === dark) ? checked : false" class="custom-control-input" id="customSwitches">
+                <input type="checkbox" class="custom-control-input" id="customSwitches">
                 <label class="custom-control-label" for="customSwitches">Light/Dark mode</label>
             </div>
         </div>
@@ -71,7 +75,6 @@
                         url_base: 'https://api.openweathermap.org/data/2.5/',
                         query: '',
                         weather: {},
-                        mode: 'dark'
                     }
                 },
                 methods: {
@@ -97,13 +100,6 @@
 
                         return `${day} ${date} ${month}`
                     },
-                    toggle () {
-                        if (this.mode === "dark"){
-                            this.mode = "light"
-                        } else {
-                            this.mode = "dark"
-                        }
-                    }
                 }
             })
         </script>
